@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+       
+        <title>SimZone Timer</title>
+        <meta name="description" content="An aesthetic MIC timer to keep you focused and motivated on simulation and explorer your career.">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background-image:url("Timer_BG_1.png");
+                background-color:rgb(15, 8, 58);
+                height: 500; 
+                background-position-x: left;
+                background-repeat: no-repeat;
+                background-size:auto; 
+                background-attachment: fixed;
+                
+                
+            }
+
+            /* Timer */
+            #timer {
+              top:40%;
+              
+              font-size:10rem;
+              font-family:fantasy; 
+              letter-spacing:0.5rem;
+              
+              font-weight:500;
+              
+              color:rgb(242, 245, 247);
+              align-items: center;
+              display:inline-block;
+              position:fixed; 
+              left: 36%;  
+            }
+      /* start button */
+            div.start {
+  
+            border: 1px solid rgb(244, 246, 247);
+            background-color:rgb(242, 245, 247);
+            padding: 15px 40px 15px 40px; 
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color:black; 
+            cursor:pointer;
+            animation: mymove 20s infinite;
+            display:inline-block; 
+            
+            position:fixed;
+            
+            top:70%; 
+            left: 42%;
+            transform: translate(-50%, -50%);
+            
+
+}
+            div.start:hover{
+            border: 1px solid #f2efef;
+            background-color:transparent; 
+            color:rgb(242, 245, 247);
+    }
+             @keyframes mymove {
+            50% {border-radius: 50px;} 
+    }
+    
+    /* Restart button */
+            div.restart {
+            padding: 10px;
+            position:fixed;
+            width: 30px; 
+            top:70%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            text-decoration:none;
+            display:inline-block; 
+            font-size: 90px; 
+            color:rgb(242, 245, 247);
+            cursor:pointer;
+            
+            
+
+}
+            div.restart:hover{
+            max-width:30px;
+            color:yellow;
+           
+            }
+            
+            /* Increase time button */
+            div.timeAdding {
+            padding: 15px;
+            position:fixed;
+            width: 30px; 
+            top:69%;
+            left: 56%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            text-decoration:none;
+            display:inline-block; 
+            font-size: 107px; 
+            color:rgb(242, 245, 247);
+            cursor:pointer;
+            
+            
+
+}
+            div.timeAdding:hover{
+            content:' \002B';
+            max-width: 30px;
+            color:yellow; 
+    }
+
+    #fullscreenBtn {
+            display: inline-block;
+            font-size: 4.2em;
+            
+            cursor: pointer;
+            background-color:transparent; 
+            color:transparent; 
+            top:80%;
+            left: 80%;
+            position: fixed;
+            border-radius: 5px;
+            user-select: none;
+        }
+        #fullscreenBtn:hover {
+            color: #f2efef;
+        }
+  @media only screen and (max-width: 620px) {
+  /* For mobile phones: */
+  .timer, .start, .restart, .timeAdding, .body {
+    width: 100%;
+  }
+  }
+        </style>
+
+    </head>
+
+    <body>
+           <div id="timer">05:00</div>
+           <div  id="startPauseBtn" class="start" onclick="toggleTimer()">pause</div>
+           <div class = "restart" onclick="resetTimer()">&#8634;</div>
+           <div class="timeAdding" onclick="addTime()">&#65291;</div>
+           <div id="fullscreenBtn" onclick="toggleFullScreen()">⛶ </div>
+
+          
+            
+           
+
+
+
+<!-- Alert Sound -->
+<audio id="alarmSound">
+  <source src="Timer_File/More info_chord.wav" type="audio/wav">
+</audio>
+
+<script>
+    let timer;
+    let timeLeft = 300; // 5 minutes in seconds
+    let isRunning = true;  // Auto-start enabled
+    let alarmSound = document.getElementById("alarmSound");
+
+    function toggleTimer() {
+        const button = document.getElementById("startPauseBtn");
+
+        if (!isRunning) {
+            isRunning = true;
+            button.innerText = "Pause";
+            timer = setInterval(updateTimer, 1000);
+        } else {
+            clearInterval(timer);
+            isRunning = false;
+            button.innerText = "Start";
+        }
+    }
+
+    function updateTimer() {
+        if (timeLeft > 0) {
+            timeLeft--;
+            document.getElementById("timer").innerText = formatTime(timeLeft);
+        } else {
+            clearInterval(timer);
+            isRunning = false;
+            document.getElementById("startPauseBtn").innerText = "Start";
+            playAlarm();
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        isRunning = false;
+        timeLeft = 300; // Reset to 5 minutes
+        document.getElementById("timer").innerText = "05:00";
+        document.getElementById("startPauseBtn").innerText = "Start";
+    }
+
+    function addTime() {
+        timeLeft += 300; // Add 5 minutes (300 seconds)
+        document.getElementById("timer").innerText = formatTime(timeLeft);
+    }
+
+    function formatTime(s) {
+        let mins = Math.floor(s / 60).toString().padStart(2, '0');
+        let secs = (s % 60).toString().padStart(2, '0');
+        return `${mins}:${secs}`;
+    }
+
+    function playAlarm() {
+        alarmSound.play();
+    }
+
+    // Auto-starts the timer when the webpage loads
+    window.onload = function() {
+        timer = setInterval(updateTimer, 1000);
+    };
+</script>
+
+
+
+<script>
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            document.getElementById("fullscreenBtn").innerText = "🗗";
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+            document.getElementById("fullscreenBtn").innerText = "⛶";
+        }
+    }
+</script>
+
+    </body>
+</html>
